@@ -1,0 +1,18 @@
+[constants]
+# BepInEx installation URL (bleeding edge build)
+bepinex_url = "https://builds.bepinex.dev/projects/bepinex_be/752/BepInEx-Unity.IL2CPP-win-x64-6.0.0-be.752%2Bdd0655f.zip"
+
+# User agent for HTTP requests
+user_agent = "restaurats-mod-manager"
+
+# Default game directory
+default_game_dir = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Restaurats"
+
+# Application window title
+app_title = "Restaurats Mod Manager"
+
+# Log scroll area max height
+log_max_height = 160.0
+
+# Mods scroll area max height
+mods_max_height = 220.0

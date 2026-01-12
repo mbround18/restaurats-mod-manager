@@ -1,0 +1,66 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # de0fac2, https://github.com/actions/checkout/releases/latest
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@e97e2d8cc328f1b50210efc529dca0028893a2d9 # e97e2d8, https://github.com/dtolnay/rust-toolchain/releases/latest
+        with:
+          toolchain: stable
+
+      - name: Cache cargo registry
+        uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb # 9255dc7, https://github.com/actions/cache/releases/latest
+        with:
+          path: ~/.cargo/registry
+          key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Cache cargo index
+        uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb # 9255dc7, https://github.com/actions/cache/releases/latest
+        with:
+          path: ~/.cargo/git
+          key: ${{ runner.os }}-cargo-git-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Cache cargo build
+        uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb # 9255dc7, https://github.com/actions/cache/releases/latest
+        with:
+          path: target
+          key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Build release binary
+        run: cargo build --release --verbose
+
+      - name: Create archive
+        shell: powershell
+        run: |
+          $version = $env:GITHUB_REF -replace 'refs/tags/', ''
+          $archiveName = "restaurats-mod-manager-${version}-windows-x64"
+          New-Item -ItemType Directory -Force -Path release
+          Copy-Item "target/release/restaurats-mod-manager.exe" -Destination "release/$archiveName.exe"
+          if (Test-Path "Config.toml") {
+            Copy-Item "Config.toml" -Destination "release/"
+          }
+          Compress-Archive -Path "release/*" -DestinationPath "$archiveName.zip"
+          Write-Output "RELEASE_NAME=$archiveName" | Add-Content -Path $env:GITHUB_ENV
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b # a06a81a, https://github.com/softprops/action-gh-release/releases/latest
+        with:
+          files: |
+            restaurats-mod-manager-*.zip
+            release/restaurats-mod-manager.exe
+            release/Config.toml
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
