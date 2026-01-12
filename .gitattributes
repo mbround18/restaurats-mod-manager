@@ -1,0 +1,11 @@
+* text=auto eol=lf
+
+# Treat these as binary
+*.exe binary
+*.dll binary
+*.pdb binary
+*.zip binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.ico binary
