@@ -9,9 +9,14 @@ PUBLISHER: Polden Publishing
 
 A simple Rust desktop app (egui/eframe) to manage mods for Restaurats.
 
+## Download & Run
+
+- Grab the latest Windows `.exe` from [GitHub Releases](https://github.com/mbround18/restaurats-mod-manager/releases)
+- Place it anywhere (or inside the game folder) and run it; no install required.
+
 Features:
 
-- Install BepInEx (auto: v5.4.23.4 via GitHub API; or custom URL/ZIP for BE IL2CPP)
+- Install BepInEx (auto: bleeding-edge BE IL2CPP build by default; or custom URL/ZIP)
 - Apply Unity 6 workaround: sets `UnityLogListening = false` in `BepInEx.cfg`
 - Drag-and-drop mod ZIPs to install (extracts to `BepInEx/plugins`)
 - Uninstall mods cleanly via tracked file list
@@ -25,20 +30,15 @@ You can change it via the Browse button.
 
 ## Installing BepInEx
 
-- Click "Install v5.4.23.4 (auto)" to download and extract the latest v5 LTS Windows x64 zip.
-- For Unity 6 IL2CPP, paste a BE IL2CPP zip URL in the custom URL field and click Install, or choose "Install from ZIP..." after downloading manually.
+- Click "Install Bleeding Edge (auto)" to download and extract the bundled IL2CPP Windows x64 zip.
+- Or paste a custom BE IL2CPP zip URL and click Install, or choose "Install from ZIP..." after downloading manually.
 - Click "Apply UnityLogListening=false" to set the recommended logging flag.
 
 Note: Writing to Program Files may require Administrator privileges. If install fails with PermissionDenied errors, run the app as Administrator.
 
-## Build & Run
+## Build (optional)
 
-Requires Rust toolchain (stable).
-
-```powershell
-cd c:\Users\micha\development\memory
-cargo run --release
-```
+If you prefer to build yourself: `cargo build --release` (Rust stable required). The shipped `.exe` from releases needs no build.
 
 ## Mod Zips
 
