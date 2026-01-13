@@ -1,6 +1,6 @@
 [package]
 name = "restaurats-mod-manager"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
 license-file = "LICENSE"
 authors = ["MBRound18 <12646562+mbround18@users.noreply.github.com>"]
