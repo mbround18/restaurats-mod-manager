@@ -8,16 +8,31 @@ param(
 
 Write-Host "Original version: $Version"
 
-# Parse and normalize version (strip leading zeros)
+# Parse and normalize version (strip leading zeros and century prefix)
 $segments = $Version -split '\.'
 $trimmedSegments = @()
+$isFirst = $true
 foreach ($segment in $segments) {
   if ($segment -match '^(\d+)-(.+)$') {
-    $trimmedSegments += "$([int]$matches[1])-$($matches[2])"
+    # Segment with suffix (e.g., "13-1")
+    $num = [int]$matches[1]
+    $suffix = $matches[2]
+    # Strip "20" prefix from first segment if it's a year (e.g., 2026 -> 26)
+    if ($isFirst -and $num -ge 2000 -and $num -lt 2100) {
+      $num = $num - 2000
+    }
+    $trimmedSegments += "$num-$suffix"
   }
   else {
-    $trimmedSegments += [int]$segment
+    # Plain numeric segment
+    $num = [int]$segment
+    # Strip "20" prefix from first segment if it's a year (e.g., 2026 -> 26)
+    if ($isFirst -and $num -ge 2000 -and $num -lt 2100) {
+      $num = $num - 2000
+    }
+    $trimmedSegments += $num
   }
+  $isFirst = $false
 }
 $cargoVersion = $trimmedSegments -join '.'
 Write-Host "Normalized version for Cargo.toml: $cargoVersion"
