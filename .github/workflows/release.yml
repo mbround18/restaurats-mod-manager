@@ -44,9 +44,13 @@ jobs:
         shell: powershell
         run: |
           $version = $env:GITHUB_REF -replace 'refs/tags/', ''
-          Write-Host "Updating Cargo.toml version to $version"
+          Write-Host "Original version: $version"
+          $segments = $version -split '\.'
+          $trimmedSegments = $segments | ForEach-Object { [int]$_ }
+          $cargoVersion = $trimmedSegments -join '.'
+          Write-Host "Updating Cargo.toml version to $cargoVersion"
           $cargoToml = Get-Content "Cargo.toml" -Raw
-          $cargoToml = $cargoToml -replace 'version = ".*?"', "version = `"$version`""
+          $cargoToml = $cargoToml -replace 'version = ".*?"', "version = `"$cargoVersion`""
           Set-Content "Cargo.toml" -Value $cargoToml -NoNewline
 
       - name: Build release binary
