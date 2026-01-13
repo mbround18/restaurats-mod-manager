@@ -2,6 +2,10 @@
 name = "restaurats-mod-manager"
 version = "0.1.0"
 edition = "2024"
+license-file = "LICENSE"
+authors = ["MBRound18 <12646562+mbround18@users.noreply.github.com>"]
+description = "A mod manager for Restaurats, a restaurant management game."
+repository = "https://github.com/mbround18/restaurats-mod-manager"
 
 [[bin]]
 name = "restaurats-mod-manager"
