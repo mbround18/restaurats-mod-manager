@@ -65,17 +65,19 @@ jobs:
         shell: powershell
         run: |
           $version = $env:GITHUB_REF -replace 'refs/tags/', ''
-          $wixVersion = "${{ steps.update_version.outputs.wix_version }}"
           $archiveName = "restaurats-mod-manager-${version}-windows-x64"
           New-Item -ItemType Directory -Force -Path release | Out-Null
           Copy-Item "target/release/restaurats-mod-manager.exe" -Destination "release/$archiveName.exe"
           if (Test-Path "Config.toml") {
             Copy-Item "Config.toml" -Destination "release/Config.toml"
           }
-          $msiPath = "target/wix/restaurats-mod-manager-$wixVersion-x86_64.msi"
-          Write-Host "Looking for MSI at: $msiPath"
-          if (Test-Path $msiPath) {
-            Copy-Item $msiPath -Destination "release/$archiveName.msi"
+          # Find the MSI file (there should only be one)
+          $msiFile = Get-ChildItem "target/wix/*.msi" -ErrorAction SilentlyContinue | Select-Object -First 1
+          if ($msiFile) {
+            Write-Host "Found MSI: $($msiFile.FullName)"
+            Copy-Item $msiFile.FullName -Destination "release/$archiveName.msi"
+          } else {
+            Write-Warning "No MSI file found in target/wix/"
           }
           Compress-Archive -Path "release/*" -DestinationPath "$archiveName.zip"
           "archive_name=$archiveName" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
