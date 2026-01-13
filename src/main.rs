@@ -1,3 +1,5 @@
+#![windows_subsystem = "windows"]
+
 mod bepinex;
 mod config;
 mod poller;
@@ -275,11 +277,6 @@ fn ui_getting_started(app: &mut AppState, ui: &mut egui::Ui) {
                     })();
                     *task.lock().unwrap() = Some(res.map_err(|e| e.to_string()));
                 });
-            }
-        }
-        if ui.button("Apply UnityLogListening=false").clicked() {
-            if let Err(e) = bepinex::set_unity_log_listening_false(&app.game_dir) {
-                app.log(&format!("Config update failed: {e}"));
             }
         }
     });

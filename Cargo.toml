@@ -3,6 +3,10 @@ name = "restaurats-mod-manager"
 version = "0.1.0"
 edition = "2024"
 
+[[bin]]
+name = "restaurats-mod-manager"
+path = "src/main.rs"
+
 [dependencies]
 eframe = { version = "0.33.3", default-features = false, features = [
     "glow",
@@ -22,8 +26,8 @@ image = { version = "0.25.9", default-features = false, features = [
     "jpeg",
 ] }
 open = "5.3.3"
-tokio = { version = "1", features = ["rt-multi-thread"] }
-toml = "0.8"
+tokio = { version = "1.49.0", features = ["rt-multi-thread"] }
+toml = "0.9.8"
 
 [dev-dependencies]
 tempfile = "3.24.0"

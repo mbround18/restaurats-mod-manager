@@ -57,11 +57,15 @@ pub fn detect_bep_status(game_dir: &PathBuf) -> String {
 
 pub fn validate_bepinex_installation(game_dir: &PathBuf) -> Result<()> {
     let bep_core_dll = game_dir.join("BepInEx").join("core").join("BepInEx.dll");
+    let bep_core_xml = game_dir
+        .join("BepInEx")
+        .join("core")
+        .join("BepInEx.Core.dll");
     let winhttp_dll = game_dir.join("winhttp.dll");
 
-    if !bep_core_dll.exists() {
+    if !bep_core_dll.exists() && !bep_core_xml.exists() {
         return Err(anyhow::anyhow!(
-            "BepInEx/core/BepInEx.dll not found after extraction"
+            "BepInEx/core/BepInEx.dll or BepInEx.Core.dll not found after extraction"
         ));
     }
 
