@@ -78,3 +78,9 @@ Write-Host "`nUpdated [package] section:"
 Get-Content $CargoTomlPath | Select-String -Pattern "^\[package\]" -Context 0, 10
 
 Write-Host "`nSuccessfully updated package version to $cargoVersion"
+
+# Output normalized version to GitHub Actions if running in CI
+if ($env:GITHUB_OUTPUT) {
+  "wix_version=$cargoVersion" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+  Write-Host "Set GITHUB_OUTPUT wix_version=$cargoVersion"
+}

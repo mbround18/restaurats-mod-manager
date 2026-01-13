@@ -41,6 +41,7 @@ jobs:
           key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
 
       - name: Update Cargo.toml version
+        id: update_version
         shell: powershell
         run: |
           .\.github\scripts\update-version.ps1 -Version "${{ github.ref_name }}"
@@ -64,13 +65,15 @@ jobs:
         shell: powershell
         run: |
           $version = $env:GITHUB_REF -replace 'refs/tags/', ''
+          $wixVersion = "${{ steps.update_version.outputs.wix_version }}"
           $archiveName = "restaurats-mod-manager-${version}-windows-x64"
           New-Item -ItemType Directory -Force -Path release | Out-Null
           Copy-Item "target/release/restaurats-mod-manager.exe" -Destination "release/$archiveName.exe"
           if (Test-Path "Config.toml") {
             Copy-Item "Config.toml" -Destination "release/Config.toml"
           }
-          $msiPath = "target/wix/restaurats-mod-manager-$version-x86_64.msi"
+          $msiPath = "target/wix/restaurats-mod-manager-$wixVersion-x86_64.msi"
+          Write-Host "Looking for MSI at: $msiPath"
           if (Test-Path $msiPath) {
             Copy-Item $msiPath -Destination "release/$archiveName.msi"
           }
