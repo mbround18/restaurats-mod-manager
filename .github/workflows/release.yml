@@ -46,7 +46,14 @@ jobs:
           $version = $env:GITHUB_REF -replace 'refs/tags/', ''
           Write-Host "Original version: $version"
           $segments = $version -split '\.'
-          $trimmedSegments = $segments | ForEach-Object { [int]$_ }
+          $trimmedSegments = @()
+          foreach ($segment in $segments) {
+            if ($segment -match '^(\d+)-(.+)$') {
+              $trimmedSegments += "$([int]$matches[1])-$($matches[2])"
+            } else {
+              $trimmedSegments += [int]$segment
+            }
+          }
           $cargoVersion = $trimmedSegments -join '.'
           Write-Host "Updating Cargo.toml version to $cargoVersion"
           $cargoToml = Get-Content "Cargo.toml" -Raw
